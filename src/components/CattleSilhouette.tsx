@@ -10,9 +10,9 @@ const CattleSilhouette = ({ aligned = false }: { aligned?: boolean }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Simplified cattle profile silhouette */}
+      {/* Buffalo body - stockier, heavier build */}
       <motion.path
-        d="M60 180 C60 160, 80 120, 120 110 L140 105 C150 100, 155 90, 160 85 L170 80 C175 78, 180 80, 182 85 L185 95 C188 100, 195 105, 200 108 L280 108 C300 108, 320 115, 330 130 L340 145 C345 155, 340 170, 335 175 L338 200 L342 250 L330 252 L325 210 L310 200 L305 250 L293 252 L290 210 L160 210 L155 250 L143 252 L140 215 L120 210 L115 250 L103 252 L105 215 C90 210, 70 200, 60 180 Z"
+        d="M55 175 C55 155, 70 115, 110 105 L130 100 C138 96, 142 88, 145 82 L150 76 C154 72, 160 70, 165 74 L170 82 C174 88, 182 95, 190 100 L195 102 C200 100, 205 98, 210 100 L290 105 C315 108, 335 120, 342 140 L348 158 C350 168, 345 178, 340 182 L342 205 L348 252 L335 254 L330 215 L318 205 L312 252 L300 254 L296 215 L165 215 L160 252 L148 254 L145 218 L128 215 L122 252 L110 254 L112 218 C95 212, 72 200, 55 175 Z"
         stroke={strokeColor}
         strokeWidth="2"
         strokeDasharray={aligned ? "0" : "8 4"}
@@ -22,9 +22,9 @@ const CattleSilhouette = ({ aligned = false }: { aligned?: boolean }) => {
         transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
       />
 
-      {/* Head detail */}
+      {/* Buffalo head - broader, heavier muzzle */}
       <motion.path
-        d="M155 90 C145 82, 135 80, 130 85 L125 95 C122 100, 125 105, 130 108"
+        d="M145 82 C135 75, 120 74, 115 80 L108 92 C105 98, 108 105, 115 108 L120 106"
         stroke={strokeColor}
         strokeWidth="1.5"
         strokeDasharray={aligned ? "0" : "6 3"}
@@ -34,11 +34,11 @@ const CattleSilhouette = ({ aligned = false }: { aligned?: boolean }) => {
         transition={{ delay: 0.5 }}
       />
 
-      {/* Horns */}
+      {/* Buffalo curved horns - wide sweeping curves */}
       <motion.path
-        d="M152 85 L148 72 M160 83 L162 70"
+        d="M140 78 C132 62, 118 52, 108 58 M158 74 C162 58, 176 48, 188 54"
         stroke={strokeColor}
-        strokeWidth="1.5"
+        strokeWidth="2"
         fill="none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -47,13 +47,25 @@ const CattleSilhouette = ({ aligned = false }: { aligned?: boolean }) => {
 
       {/* Ear */}
       <motion.path
-        d="M165 78 C170 68, 178 68, 175 78"
+        d="M162 72 C168 60, 174 62, 172 72"
         stroke={strokeColor}
         strokeWidth="1.5"
         fill="none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
+      />
+
+      {/* Hump on back */}
+      <motion.path
+        d="M195 102 C198 88, 210 82, 225 85 C235 87, 240 95, 238 100"
+        stroke={strokeColor}
+        strokeWidth="1.5"
+        strokeDasharray={aligned ? "0" : "6 3"}
+        fill="none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
       />
     </svg>
   );

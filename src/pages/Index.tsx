@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, Search, ChevronUp, RotateCcw, Check, MapPin, Tag } from "lucide-react";
+import { Camera, Search, ChevronUp, RotateCcw, Check, MapPin, Tag, Upload, ImageIcon } from "lucide-react";
 import CattleSilhouette from "@/components/CattleSilhouette";
 import KeypointOverlay from "@/components/KeypointOverlay";
 import MeasurementCard from "@/components/MeasurementCard";
@@ -32,6 +32,9 @@ const Index = () => {
   const [state, setState] = useState<AppState>("identify");
   const [animalId, setAnimalId] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleIdentify = () => {
     if (animalId.trim()) setState("capture");
@@ -46,7 +49,32 @@ const Index = () => {
     setState("identify");
     setAnimalId("");
     setDrawerOpen(true);
+    setUploadedImage(null);
   };
+
+  const handleFileSelect = (file: File) => {
+    if (file && file.type.startsWith("image/")) {
+      const url = URL.createObjectURL(file);
+      setUploadedImage(url);
+      // Auto-trigger processing after upload
+      setState("processing");
+      setTimeout(() => setState("results"), 2400);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => setIsDragging(false);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -159,8 +187,12 @@ const Index = () => {
               className="flex-1 flex flex-col"
             >
               {/* Viewfinder */}
-              <div className="relative flex-1 min-h-[50vh] bg-foreground/95 blueprint-grid flex items-center justify-center overflow-hidden">
-                <CattleSilhouette aligned={false} />
+              <div className="relative flex-1 min-h-[40vh] bg-foreground/95 blueprint-grid flex items-center justify-center overflow-hidden">
+                {uploadedImage ? (
+                  <img src={uploadedImage} alt="Uploaded animal" className="max-h-full max-w-full object-contain" />
+                ) : (
+                  <CattleSilhouette aligned={false} />
+                )}
 
                 {/* Guide text */}
                 <div className="absolute top-4 left-0 right-0 text-center">
@@ -197,6 +229,45 @@ const Index = () => {
                   >
                     <Camera className="w-6 h-6 text-primary-foreground" />
                   </button>
+                </div>
+              </div>
+
+              {/* Upload area */}
+              <div className="px-4 py-4 bg-background border-t border-border">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleFileSelect(file);
+                  }}
+                />
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-colors ${
+                    isDragging
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50 hover:bg-muted/50"
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                      <Upload className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-display font-medium text-foreground">
+                        Upload animal photo
+                      </p>
+                      <p className="text-[10px] text-muted-foreground font-body mt-0.5">
+                        Drag & drop or tap to browse · JPG, PNG
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>

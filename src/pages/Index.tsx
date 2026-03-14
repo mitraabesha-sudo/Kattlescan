@@ -32,6 +32,9 @@ const Index = () => {
   const [state, setState] = useState<AppState>("identify");
   const [animalId, setAnimalId] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleIdentify = () => {
     if (animalId.trim()) setState("capture");
@@ -46,7 +49,32 @@ const Index = () => {
     setState("identify");
     setAnimalId("");
     setDrawerOpen(true);
+    setUploadedImage(null);
   };
+
+  const handleFileSelect = (file: File) => {
+    if (file && file.type.startsWith("image/")) {
+      const url = URL.createObjectURL(file);
+      setUploadedImage(url);
+      // Auto-trigger processing after upload
+      setState("processing");
+      setTimeout(() => setState("results"), 2400);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => setIsDragging(false);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

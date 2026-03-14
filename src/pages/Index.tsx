@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, Search, ChevronUp, RotateCcw, Check, MapPin, Tag } from "lucide-react";
+import { Camera, Search, ChevronUp, RotateCcw, Check, MapPin, Tag, Upload, ImageIcon } from "lucide-react";
 import CattleSilhouette from "@/components/CattleSilhouette";
 import KeypointOverlay from "@/components/KeypointOverlay";
 import MeasurementCard from "@/components/MeasurementCard";
